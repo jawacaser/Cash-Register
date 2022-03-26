@@ -1,0 +1,172 @@
+//fCC JavaScript Solutions
+//Owner
+//jawacaser
+//Modified
+//Mar 15, 2022 by me
+//Opened
+//8:37 PM by me
+//Created
+//Mar 17, 2022 with Google Drive Web
+//Add a description
+//Viewers can download
+
+function checkCashRegister(price, cash, cid) {
+  console.log("Paid: " + cash);
+  console.log("Price: " + price);
+  let diff = Math.round((cash - price) * 100)/100;
+  const rememberMe = diff;
+  console.log("Change: " + diff);
+
+  function cidTotal() {
+    let temp = [];
+    for (let c = 0; c < cid.length; c++) {
+      temp.push(cid[c][1]);
+    }
+    return temp.reduce(function(a,b) {
+      return a + b;
+    }).toFixed(2)
+  }
+  let drawer = cidTotal(); //total amount of cash in drawer
+  console.log("Register: " + drawer)
+
+  let hun = cid[8][1];
+  let tnt = cid[7][1];
+  let ten = cid[6][1];
+  let fiv = cid[5][1];
+  let one = cid[4][1];
+  let qua = cid[3][1];
+  let dim = cid[2][1];
+  let nic = cid[1][1];
+  let pen = cid[0][1];  
+
+  let countDown = [["ONE HUNDRED", 0], ["TWENTY", 0], ["TEN", 0], ["FIVE", 0], 
+    ["ONE", 0], ["QUARTER", 0], ["DIME", 0], ["NICKEL", 0], ["PENNY", 0]];
+
+  let countReturn = countDown.filter(function() {
+    for (let i = 0; i < countDown.length; i++) {
+      if (countDown[i][1] != 0) {
+        return true
+      }
+    }
+  }); // this is what is returned on a successful transaction
+      // unless change due is = amount in cid
+  console.log("Countback: " + countReturn);
+
+  function doable() {
+    if (Math.round(diff * 100)/100 >= 0) {
+    function hu() {
+      while (Math.round(diff * 100)/100 >= 100 && hun >= 100) {
+      hun -= 100;
+      diff -= 100;
+      countDown[0][1] += 100;
+      }
+    }
+    function tn() {
+      while (Math.round(diff * 100)/100 >= 20 && tnt >= 20) {
+      tnt -= 20;
+      diff -= 20;
+      countDown[1][1] += 20;
+      }
+    }
+    function te() {
+      while (Math.round(diff * 100)/100 >= 10 && ten >= 10) {
+      ten -= 10;
+      diff -= 10;
+      countDown[2][1] += 10;
+      } 
+    }
+    function fi() {
+      while (Math.round(diff * 100)/100 >= 5 && fiv >= 5) {
+      fiv -= 5;
+      diff -= 5;
+      countDown[3][1] += 5;
+      }
+    }
+    function on() {
+      while (Math.round(diff * 100)/100 >= 1 && one >= 1) {
+      one -= 1;
+      diff -= 1;
+      countDown[4][1] += 1;
+      }
+    }
+    function qu() {
+      while (Math.round(diff * 100)/100 >= .25 && qua >= .25) {
+      qua -= .25;
+      diff -= .25;
+      countDown[5][1] += .25;
+      }
+    }
+    function di() {
+      while (Math.round(diff * 100)/100 >= .1 && dim >= .1) {
+      dim -= .1;
+      diff -= .1;
+      countDown[6][1] += .1;
+      }
+    }
+    function ni() {
+      while (Math.round(diff * 100)/100 >= .05 && nic >= .05) {
+      nic -= .05;
+      diff -= .05;
+      countDown[7][1] += .05;
+      }
+    }
+    function pe() {
+      while (Math.round(diff * 100)/100 >= .01 && Math.round(pen*100)/100 >= .01) {
+      pen -= .01;
+      diff -= .01;
+      countDown[8][1] += .01;
+      }
+    }
+        //run all of the currency manipulation functions
+    hu();tn();te();fi();on();qu();di();ni();pe();
+    if (Math.round(diff * 100)/100 == 0) {
+      return true
+    }
+    } else {
+      return false}
+  }
+  doable();
+  //returns true or false, regarding whether drawer is able to make correct change
+
+  let filtCount = countDown.filter(function rec() {
+    let elem = arguments;
+    for (let y = 0; y < elem.length; y++) {
+      return elem[y][1] != 0;
+    }
+  });
+  console.log(filtCount);// this is the succesfully filtered change array
+//console.log(rememberMe)
+  let statFunc = function() { // this returns the status of the shop register
+    if (rememberMe > drawer || !Boolean(doable())) {
+        return "INSUFFICIENT_FUNDS";
+      } else if (rememberMe == drawer) {
+        return "CLOSED";
+      } else {
+        return "OPEN";
+      }
+  };
+
+//console.log(Math.round(diff * 100)/100); optional info
+    // tells you how short-changed your drawer is;
+
+  let changeFunc = function() { // this returns the correct change array
+      if (rememberMe == drawer) {
+        return cid;
+      } else if (rememberMe > drawer || !Boolean(doable())) {
+        return [];
+      } else {
+        return filtCount;
+      }
+  };
+
+//my returnable object, transaction details
+  const transaction = {
+    status: statFunc(),
+    change: changeFunc()
+  };
+
+  console.log(transaction);
+  return transaction;
+}
+
+checkCashRegister(19.49, 265, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 200]]);
